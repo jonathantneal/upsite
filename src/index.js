@@ -2,9 +2,11 @@ import argo from './lib/argo';
 import getAvailablePort from './lib/get-available-port';
 import http from 'http';
 import https from 'https';
+import manageTemplateTouch from './lib/manage-template-touch';
 import msgs from './lib/messages';
 import normalizePlugins from './lib/normalize-plugins';
 import requireAs from './lib/require-as';
+import templates from './lib/templates';
 import touchAs from './lib/touch-as';
 import trustCertificate from './lib/trust-certificate';
 
@@ -34,39 +36,69 @@ app.use(expressVariable(argo.dir, {
 			onInstalled(id) { installedPlugins.push(id); }
 		};
 
-		if (Object(opts.html.plugins).length) {
-			normalizePlugins(
-				opts.html.plugins,
-				id => id.replace(/^(@(?!phtml)\/)(?!phtml)/, '$phtml-').replace(/^(?!@|phtml-)/, 'phtml-'),
-				requiredOpts
-			);
+		const template = templates[argo.template] || (Object(argo.template) === argo.template ? argo.template : {});
+		const templatePlugins = {
+			html: Array.from(Object(template.html).plugins || []),
+			css: Array.from(Object(template.css).plugins || []),
+			js: Array.from(Object(template.js).plugins || [])
+		};
+		const templatePresets = {
+			js: Array.from(Object(template.js).presets || [])
+		};
+
+		manageTemplateTouch(template);
+
+		if (Array.isArray(opts.html.plugins)) {
+			opts.html.plugins.unshift(...templatePlugins.html);
+
+			if (opts.html.plugins.length) {
+				normalizePlugins(
+					opts.html.plugins,
+					id => id.replace(/^(@(?!phtml)\/)(?!phtml)/, '$phtml-').replace(/^(?!@|phtml-)/, 'phtml-'),
+					requiredOpts
+				);
+			}
 		}
 
-		if (Object(opts.css.plugins).length) {
-			normalizePlugins(
-				opts.css.plugins,
-				id => id.replace(/^(@[^\/]+\/)(?!postcss)/, '$1postcss-').replace(/^(?!@|postcss-)/, 'postcss-'),
-				requiredOpts
-			);
-		} else {
-			// supress plugin warnings
-			opts.css.plugins = [() => {}];
+		if (Array.isArray(opts.css.plugins)) {
+			opts.css.plugins.unshift(...templatePlugins.css);
+
+			if (opts.css.plugins.length) {
+				normalizePlugins(
+					opts.css.plugins,
+					id => id.replace(/^(@[^\/]+\/)(?!postcss)/, '$1postcss-').replace(/^(?!@|postcss-)/, 'postcss-'),
+					requiredOpts
+				);
+			} else {
+				// supress plugin warnings
+				opts.css.plugins = [() => {}];
+			}
 		}
 
-		if (Object(opts.js.plugins).length) {
-			normalizePlugins(
-				opts.js.plugins,
-				id => id.replace(/^(@[^\/]+\/)(?!plugin)/, '$1plugin-').replace(/^(?!@|babel-plugin)/, 'babel-plugin-'),
-				requiredOpts
-			);
+		if (Array.isArray(opts.js.plugins)) {
+			opts.js.plugins.unshift(...templatePlugins.js);
+
+			if (opts.js.plugins.length) {
+				normalizePlugins(
+					opts.js.plugins,
+					id => id.replace(/^(@[^\/]+\/)(?!plugin)/, '$1plugin-').replace(/^(?!@|babel-plugin)/, 'babel-plugin-'),
+					requiredOpts
+				);
+			}
 		}
 
-		if (Object(opts.js.presets).length) {
-			normalizePlugins(
-				opts.js.presets,
-				id => id.replace(/^(@[^\/]+\/)(?!preset)/, '$1preset-').replace(/^(?!@|babel-preset)/, 'babel-preset-'),
-				requiredOpts
-			);
+		opts.js.presets = opts.js.presets || [];
+
+		if (Array.isArray(opts.js.presets)) {
+			opts.js.presets.unshift(...templatePresets.js);
+
+			if (opts.js.presets.length) {
+				normalizePlugins(
+					opts.js.presets,
+					id => id.replace(/^(@[^\/]+\/)(?!preset)/, '$1preset-').replace(/^(?!@|babel-preset)/, 'babel-preset-'),
+					requiredOpts
+				);
+			}
 		}
 
 		app.use(express.static('public'));
