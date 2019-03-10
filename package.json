@@ -1,0 +1,46 @@
+{
+  "name": "upsite",
+  "version": "0.1.0",
+  "description": "Just put up a site",
+  "author": "Jonathan Neal <jonathantneal@hotmail.com>",
+  "license": "CC0-1.0",
+  "repository": "jonathantneal/upsite",
+  "homepage": "https://github.com/jonathantneal/upsite#readme",
+  "bugs": "https://github.com/jonathantneal/upsite/issues",
+  "bin": {
+    "upsite": "index.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "build": "rollup --config --silent",
+    "prepublishOnly": "npm test && npm run build",
+    "test": "npm run test:js",
+    "test:js": "eslint src/*.js src/lib/*.js --cache --ignore-path .gitignore --quiet"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.15.1",
+    "eslint-config-dev": "^2.0.0",
+    "fse": "^4.0.1",
+    "resolve": "^1.10.0",
+    "rollup": "^1.6.0",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-commonjs": "^9.2.1",
+    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-node-resolve": "^4.0.1",
+    "rollup-plugin-terser": "^4.0.4",
+    "selfsigned": "^1.10.4"
+  },
+  "eslintConfig": {
+    "extends": "dev",
+    "parser": "babel-eslint"
+  },
+  "keywords": []
+}

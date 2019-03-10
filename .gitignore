@@ -1,0 +1,9 @@
+.*
+!.editorconfig
+!.gitignore
+!.travis.yml
+*.log*
+/localhost.*
+/index.*
+node_modules
+package-lock.json
