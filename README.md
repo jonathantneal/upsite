@@ -13,6 +13,15 @@ npx upsite
 HTML, CSS, and JS files are automatically transformed using [pHTML], [PostCSS],
 and [Babel].
 
+---
+
+[Upsite] automatically spins up a server and lets you start writing to files —
+batteries included. Once started, Upsite creates a `package.json` file and a
+`public` folder with HTML, CSS, and JS files inside of it. It also installs
+[Express], configuring it to intercept `.html` files for [pHTML], `.css` files
+for [PostCSS], and `.js` files for [Babel]. It also creates a self-signed SSL
+certificate for HTTPS and attempts to certify it on your machine.
+
 [cli-img]: https://img.shields.io/travis/jonathantneal/upsite.svg
 [cli-url]: https://travis-ci.org/jonathantneal/upsite
 [git-img]: https://img.shields.io/badge/support-chat-blue.svg
