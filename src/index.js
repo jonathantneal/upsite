@@ -26,10 +26,11 @@ app.use(expressVariable(argo.dir, {
 
 		manageOptions(opts, argo);
 
-		Promise.all([
-			getAvailablePort(Number(argo.port === true ? 80 : argo.port) || 80, 1000),
-			getAvailablePort(Number(argo.ssl === true ? 443 : argo.ssl) || 443, 1000)
-		]).then(([httpPort, httpsPort]) => {
+		getAvailablePort(Number(argo.port === true ? 80 : argo.port) || 80, 1000).then(
+			httpPort => getAvailablePort(Number(argo.ssl === true ? 443 : argo.ssl) || 443, 1000, httpPort).then(
+				httpsPort => [httpPort, httpsPort]
+			)
+		).then(([httpPort, httpsPort]) => {
 			const pems = trustCertificate(msgs);
 
 			http.createServer({}, app).listen(httpPort);

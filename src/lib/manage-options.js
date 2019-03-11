@@ -87,4 +87,20 @@ export default function manageOptions(opts, argo) {
 	if ('sourceMaps' in Object(template.js)) {
 		opts.js.sourceMaps = template.js.sourceMaps;
 	}
+
+	manageOnEvents(opts, template);
+}
+
+function manageOnEvents(opts, template) {
+	if ('onHTML' in template) {
+		opts.onHTML = template.onHTML;
+	}
+
+	if ('onCSS' in template) {
+		opts.onCSS = template.onCSS;
+	}
+
+	if ('onJS' in template) {
+		opts.onJS = template.onJS;
+	}
 }

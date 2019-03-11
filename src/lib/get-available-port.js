@@ -1,6 +1,6 @@
 import net from 'net';
 
-export default function getAvailablePort(portStart, portRange) {
+export default function getAvailablePort(portStart, portRange, skippedPort) {
 	let portIndex = -1;
 
 	let portPromise = Promise.reject();
@@ -8,14 +8,16 @@ export default function getAvailablePort(portStart, portRange) {
 	while (++portIndex < portRange) {
 		const currentPort = Number(portStart) + portIndex;
 
-		portPromise = portPromise.catch(() => isPortAvailable(currentPort));
+		portPromise = portPromise.catch(() => isPortAvailable(currentPort, skippedPort));
 	}
 
 	return portPromise;
 }
 
-function isPortAvailable(port) {
-	return new Promise((resolve, reject) => {
+function isPortAvailable(port, skippedPort) {
+	return port === skippedPort
+		? Promise.reject()
+	: new Promise((resolve, reject) => {
 		const tester = net.createServer()
 		.once('error', reject)
 		.once('listening', () => {
