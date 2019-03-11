@@ -1,11 +1,13 @@
 import net from 'net';
 
-export default function getAvailablePort(portStart, portRange, skippedPort) {
+export default function getAvailablePort(portStart, skippedPort) {
 	let portIndex = -1;
 
 	let portPromise = Promise.reject();
 
-	while (++portIndex < portRange) {
+	const maxPort = 9999 - portStart;
+
+	while (++portIndex < maxPort) {
 		const currentPort = Number(portStart) + portIndex;
 
 		portPromise = portPromise.catch(() => isPortAvailable(currentPort, skippedPort));
