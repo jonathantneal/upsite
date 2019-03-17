@@ -4,17 +4,18 @@ import json from 'rollup-plugin-json';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 
-const input = 'src/index.js';
-const output = { file: 'index.js', format: 'cjs' };
+const isCli = String(process.env.NODE_ENV).includes('cli');
+
+const input = isCli ? 'src/cli.js' : 'src/index.js';
+const output = isCli ? { file: 'cli.js', format: 'cjs' } : [{ file: 'index.js', format: 'cjs' }, { file: 'index.mjs', format: 'esm' }];
 const plugins = [
 	babel(),
 	nodeResolve(),
 	commonjs(),
 	json(),
 	terser(),
-	trimUseStrict(),
-	addHashBang()
-]
+	trimUseStrict()
+].concat(isCli ? addHashBang() : [])
 
 export default { input, output, plugins };
 

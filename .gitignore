@@ -4,6 +4,7 @@
 !.travis.yml
 *.log*
 /localhost.*
+/cli.*
 /index.*
 node_modules
 package-lock.json
