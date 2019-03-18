@@ -9,3 +9,7 @@ export default function touchFileAs(filename, fallbackData) {
 		throw error;
 	});
 }
+
+export function touchPackageJson() {
+	return touchFileAs('package.json', JSON.stringify({ private: true }, null, '  '));
+}

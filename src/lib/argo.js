@@ -13,7 +13,8 @@ const namelessArgs = [
 const shorthandArgs = {
 	'-c': '--config',
 	'-d': '--dir',
-	'-p': '--port'
+	'-p': '--port',
+	'-t': '--trust'
 };
 
 const dash = /^--([^\s]+)$/;

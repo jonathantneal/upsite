@@ -1,7 +1,7 @@
 import { required, require_config as readConfig } from './util';
 import msgs from './messages';
 import configs from './configs';
-import touchFileAs from './touch-file-as';
+import touchFileAs, { touchPackageJson } from './touch-file-as';
 
 export default function getConfigOpts(opts, initialConfig, cache) {
 	// get the specified config or the default config
@@ -32,18 +32,24 @@ export default function getConfigOpts(opts, initialConfig, cache) {
 
 	configOpts.uses.forEach(use => {
 		// install and require modules requested by the use
-		Object.keys(Object(use.require)).forEach(name => {
-			const id = use.require[name];
+		const requireNames = Object.keys(Object(use.require));
 
-			usePromise = usePromise.then(
-				() => required(id, {
-					npmInstallOptions: '--save-dev',
-					onBeforeNpmInstall: msgs.isInstalling
-				}, cache).then(requiredExport => {
-					use.require[name] = requiredExport;
-				})
-			);
-		});
+		if (requireNames.length) {
+			usePromise = usePromise.then(touchPackageJson);
+
+			requireNames.forEach(name => {
+				const id = use.require[name];
+
+				usePromise = usePromise.then(
+					() => required(id, {
+						npmInstallOptions: '--save-dev',
+						onBeforeNpmInstall: msgs.isInstalling
+					}, cache).then(requiredExport => {
+						use.require[name] = requiredExport;
+					})
+				);
+			});
+		}
 
 		// run the config function
 		if (typeof use.config === 'function') {
