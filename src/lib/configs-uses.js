@@ -120,6 +120,9 @@ const useJsx = {
 		).then(
 			nextConfig => ({
 				plugins: [
+					['@babel/proposal-class-properties', {
+						loose: true
+					}],
 					['@babel/plugin-transform-react-jsx', {
 						pragma: '$',
 						pragmaFrag: '$',
@@ -176,6 +179,11 @@ const useReact = {
 			() => use.readConfig('babel')
 		).then(
 			nextConfig => ({
+				plugins: [
+					['@babel/proposal-class-properties', {
+						loose: true
+					}]
+				],
 				presets: [
 					['@babel/preset-react', {
 						useBuiltIns: true
