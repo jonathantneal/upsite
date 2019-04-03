@@ -10,6 +10,10 @@ export default {
 		uses: uses.default,
 		touch: touch.default
 	},
+	empty: {
+		uses: uses.empty,
+		touch: touch.empty
+	},
 	jsx: {
 		uses: uses.jsx,
 		touch: touch.jsx

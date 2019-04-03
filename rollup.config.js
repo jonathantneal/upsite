@@ -7,26 +7,16 @@ import { terser } from 'rollup-plugin-terser';
 const isCli = String(process.env.NODE_ENV).includes('cli');
 
 const input = isCli ? 'src/cli.js' : 'src/index.js';
-const output = isCli ? { file: 'cli.js', format: 'cjs' } : [{ file: 'index.js', format: 'cjs' }, { file: 'index.mjs', format: 'esm' }];
+const output = isCli ? { file: 'cli.js', format: 'cjs', strict: false } : [{ file: 'index.js', format: 'cjs', strict: false }, { file: 'index.mjs', format: 'esm', strict: false }];
 const plugins = [
 	babel(),
 	nodeResolve(),
 	commonjs(),
 	json(),
-	terser(),
-	trimUseStrict()
+	terser()
 ].concat(isCli ? addHashBang() : [])
 
 export default { input, output, plugins };
-
-function trimUseStrict() {
-	return {
-		name: 'trim-use-strict',
-		renderChunk(code) {
-			return code.replace(/\s*('|")?use strict\1;\s*/, '');
-		}
-	};
-}
 
 function addHashBang() {
 	return {

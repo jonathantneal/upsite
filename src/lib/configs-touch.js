@@ -112,7 +112,7 @@ const touchReactIndexHtml = `<!doctype html>
 <script src="https://unpkg.com/react-dom@16/umd/react-dom.development"></script>
 <script src="script.js"></script>
 <link rel="stylesheet" href="style.css">
-<body><div id="root" /></body>`;
+<body><div id="root"></div></body>`;
 
 const touchReactScriptJs = `document.addEventListener('DOMContentLoaded', () => {
 	ReactDOM.render(<>

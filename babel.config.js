@@ -1,6 +1,12 @@
 module.exports = {
+	plugins: [
+		['@babel/plugin-proposal-class-properties', {
+			loose: true
+		}]
+	],
 	presets: [
-		['@babel/env', {
+		['@babel/preset-env', {
+			corejs: 3,
 			loose: true,
 			modules: false,
 			targets: { node: 6 },
